@@ -73,7 +73,8 @@ class DFS:
                 self.path.append(self.discovered[walk])
                 walk = self.parent[walk][self.discovered[walk]]
             self.path.reverse()
-    
+
+            
 if __name__ == "__main__":
     T = int(input())
     for i in range(T):
@@ -86,4 +87,3 @@ if __name__ == "__main__":
         dfs = DFS(g.G, g.parent, start, end)
         dfs.find_path()
         print("Case #{}: {}".format(str(i+1), ''.join(dfs.path)))
-
