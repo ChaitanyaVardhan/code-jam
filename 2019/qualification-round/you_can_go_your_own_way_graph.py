@@ -74,6 +74,39 @@ class DFS:
                 walk = self.parent[walk][self.discovered[walk]]
             self.path.reverse()
 
+
+class BFS:
+    def __init__(self, G, parent, start, end):
+        self.G = G
+        self.parent = parent
+        self.start = hash(start)
+        self.end = hash(end)
+        self.discovered = {}
+        self.discovered[self.start] = None
+        self.path = []
+        self.run(self.start)
+
+    def run(self, v):
+        level = [v]
+        while len(level) > 0:
+            next_level = []
+            for v in level:
+                for key in self.G[v].keys():
+                    if self.G[v].get(key):
+                        if self.G[v][key] not in self.discovered:
+                            self.discovered[self.G[v][key]] = key
+                            next_level.append(self.G[v][key])
+            level = next_level       
+
+    def find_path(self):
+        if self.end in self.discovered:
+            self.path.append(self.discovered[self.end])
+            walk = self.parent[self.end][self.discovered[self.end]]
+            while walk != self.start:
+                self.path.append(self.discovered[walk])
+                walk = self.parent[walk][self.discovered[walk]]
+            self.path.reverse()
+
             
 if __name__ == "__main__":
     T = int(input())
@@ -84,6 +117,7 @@ if __name__ == "__main__":
         start = (0,0)
         end = (N-1, N-1)
         g.remove_path(path, start, end)
-        dfs = DFS(g.G, g.parent, start, end)
-        dfs.find_path()
-        print("Case #{}: {}".format(str(i+1), ''.join(dfs.path)))
+        bfs = BFS(g.G, g.parent, start, end)
+        bfs.find_path()
+        print("Case #{}: {}".format(str(i+1), ''.join(bfs.path)))
+
