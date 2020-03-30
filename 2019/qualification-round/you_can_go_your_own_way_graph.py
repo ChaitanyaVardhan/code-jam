@@ -18,16 +18,24 @@ class Graph:
         for key in self.G.keys():
             coords = self.get_coord(key)
             if coords[1] + 1 < self.columns:
-                self.G[key]["W"] = self.make_key(coords[0], coords[1] + 1)
-                self.parent[self.make_key(coords[0], coords[1] + 1)]["W"] = key
+                self.G[key]["E"] = self.make_key(coords[0], coords[1] + 1)
+                self.parent[self.make_key(coords[0], coords[1] + 1)]["E"] = key
             else:
-                self.G[key]["W"] = None
+                self.G[key]["E"] = None
 
             if coords[0] + 1 < self.rows:
                 self.G[key]["S"] = self.make_key(coords[0] + 1, coords[1])
                 self.parent[self.make_key(coords[0] + 1, coords[1])]["S"] = key
             else:
                 self.G[key]["S"]  = None
+
+    def remove_path(self, path, start, end):
+        i = hash(start)
+        j = 0
+        end = hash(end)
+        while i != end:
+            i = self.G[i].pop(path[j])
+            j += 1
 
     def make_key(self, i, j):
         k = hash((i, j))
@@ -64,17 +72,18 @@ class DFS:
             while walk != self.start:
                 self.path.append(self.discovered[walk])
                 walk = self.parent[walk][self.discovered[walk]]
-                
+            self.path.reverse()
     
 if __name__ == "__main__":
-    g = Graph(100, 100)
-    print(g.G)
-    print(g.parent)
-    print(g.G[hash((1,1))])
-    start = (0,0)
-    end = (99, 99)
-    dfs = DFS(g.G, g.parent, start, end)
-    print(dfs.discovered)
-    dfs.find_path()
-    print(dfs.path)
+    T = int(input())
+    for i in range(T):
+        N = int(input())
+        path = input()
+        g = Graph(N, N)
+        start = (0,0)
+        end = (N-1, N-1)
+        g.remove_path(path, start, end)
+        dfs = DFS(g.G, g.parent, start, end)
+        dfs.find_path()
+        print("Case #{}: {}".format(str(i+1), ''.join(dfs.path)))
 
