@@ -9,43 +9,60 @@ def solve(I):
         return ''.join(unsorted_sched_1)
     
 
-def solve_for_first(I, parent, other):
-    unsorted_sched = []
-    unsorted_sched.append(parent)
-    p1_prev_finish_time = I[0][1]
-    p1_prev_start_time = I[0][0]
-    for i in range(1, len(I)):
-        if I[i][0] >= p1_prev_finish_time:
-            unsorted_sched.append(parent)
-            p1_prev_finish_time = I[i][1]
-        elif I[i][1] <= p1_prev_start_time:
-            unsorted_sched.append(parent)
-            p1_prev_start_time = I[i][0]
+def fits(intervals, elem):
+    temp_arr = list(intervals)
+    temp_arr.append(elem)
+    if non_overlapping(temp_arr):
+        return True
+    else:
+        return False
+    
+
+def non_overlapping(interval_arr):
+    sorted_arr = sorted(interval_arr, key=lambda x: x[1])
+    i = 0
+    while i < len(interval_arr)-1:
+        if sorted_arr[i][1] <= sorted_arr[i+1][0]:
+            i += 1
         else:
-            unsorted_sched.append(other)
-
-
-    j = 0
-    while j < len(unsorted_sched):
-        if unsorted_sched[j] == other:
             break
+
+    if i == len(sorted_arr) - 1:
+        return True
+    else:
+        return False
+
+    
+def solve_for_first(I, parent, other):
+    sched = []
+    sched.append(parent)
+    intervals = []
+    intervals.append(I[0])
+    
+    i = 1
+    while i < len(I):
+        if fits(intervals, I[i]):
+            sched.append(parent)
+            intervals.append(I[i])
         else:
-            j += 1
-    if j >= 0 and j < len(unsorted_sched):
-        p2_prev_finish_time = I[j][1]
-        p2_prev_start_time = I[j][0]
-        for k in range(j+1, len(unsorted_sched)):
-            if unsorted_sched[k]  == other:
-                if I[k][0] >= p2_prev_finish_time:
-                    p2_prev_finish_time = I[k][1]
-                elif I[k][1] <= p2_prev_start_time:
-                    p2_prev_start_time = I[k][0]
-                else:
-                    unsorted_sched[k] = 'X'
+            sched.append("X")
+        i += 1
+        
+    residual_intervals = []
+    for k in range(1, len(sched)):
+        if sched[k] == "X":
+            residual_intervals.append(I[k])
+        else:
+            continue
+
+    if non_overlapping(residual_intervals):
+        for j in range(len(sched)):
+            if sched[j] == "X":
+                sched[j] = other
             else:
                 continue
-
-    return unsorted_sched
+            
+    return sched
     
     
 if __name__ == "__main__":
