@@ -5,21 +5,22 @@ def solve(N, K):
     row = [i for i in range(1, N+1)]    
     rows = list(itertools.permutations(row))
     matrices = []
-    for i in range(len(rows)):
+    for k in range(len(rows)):
         matrix = []
-        matrix.append(rows[i])
+        matrix.append(rows[k])
         build_matrix(matrix, N)
         matrices.append(matrix)
 
-    while i < len(matrices):
-        trace = compute_trace(matrices[i])
+    j = 0
+    while j < len(matrices):
+        trace = compute_trace(matrices[j])
         if trace == K:
             break
         else:
-            i += 1
+            j += 1
 
-    if i < len(matrices):
-        return ("POSSIBLE", matrices[i])
+    if j < len(matrices):
+        return ("POSSIBLE", matrices[j])
     else:
         return ("IMPOSSIBLE",)
 
@@ -30,10 +31,12 @@ def build_matrix(matrix, N):
     
     last_row = matrix[-1]
     new_row = [None] * N
-    for i in range(N):
-        new_row[i] = last_row[(i+1) % N]
-    matrix.append(new_row)
-    build_matrix(matrix, N)
+
+    for j in range(1, N, 2):
+        for i in range(N):            
+            new_row[i] = last_row[(i+j) % N]
+        matrix.append(new_row)
+        build_matrix(matrix, N)
 
 
 def compute_trace(matrix):
@@ -51,5 +54,5 @@ if __name__ == "__main__":
         ans = solve(N, K)
         print("Case #{}: {}".format(str(i+1), ans[0]))
         if ans[0] == "POSSIBLE":
-            for i in range(len(ans[1])):
-                print(' '.join(str(n) for n in ans[1][i]))
+            for j in range(len(ans[1])):
+                print(' '.join(str(n) for n in ans[1][j]))
