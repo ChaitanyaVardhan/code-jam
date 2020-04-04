@@ -18,24 +18,32 @@ def solve_for_first(I, parent, other):
         if I[i][0] >= p1_prev_finish_time:
             unsorted_sched.append(parent)
             p1_prev_finish_time = I[i][1]
-        elif I[i][1] < p1_prev_start_time:
+        elif I[i][1] <= p1_prev_start_time:
             unsorted_sched.append(parent)
             p1_prev_start_time = I[i][0]
         else:
             unsorted_sched.append(other)
 
-    p2_prev_finish_time = -1
-    p2_prev_start_time = -2
-    for i in range(len(unsorted_sched)):
-        if unsorted_sched[i]  == other:
-            if I[i][0] >= p2_prev_finish_time:
-                p2_prev_finish_time = I[i][1]
-            elif I[i][1] < p2_prev_start_time:
-                p2_prev_start_time = I[i][0]
-            else:
-                unsorted_sched[i] = 'X'
+
+    j = 0
+    while j < len(unsorted_sched):
+        if unsorted_sched[j] == other:
+            break
         else:
-            continue
+            j += 1
+    if j >= 0 and j < len(unsorted_sched):
+        p2_prev_finish_time = I[j][1]
+        p2_prev_start_time = I[j][0]
+        for k in range(j+1, len(unsorted_sched)):
+            if unsorted_sched[k]  == other:
+                if I[k][0] >= p2_prev_finish_time:
+                    p2_prev_finish_time = I[k][1]
+                elif I[k][1] <= p2_prev_start_time:
+                    p2_prev_start_time = I[k][0]
+                else:
+                    unsorted_sched[k] = 'X'
+            else:
+                continue
 
     return unsorted_sched
     
