@@ -1,5 +1,4 @@
 def solve(A, N):
-    print(A)
     # compute trace
     trace = 0
     for k in range(N):
@@ -49,11 +48,10 @@ if __name__ == "__main__":
         N = int(input())
         c = N
         r = N
-        A = [[0] * c for j in range(r)]
+        A = []
         for j in range(N):
-            line = input().split(" ")
-            for k in range(len(line)):
-                A[j][k] = int(line[k])
+            row = [int(s) for s in input().split(" ")]
+            A.append(row)
 
         ans = solve(A, N)
         print("Case #{}: {} {} {}".format(str(i+1), str(ans[0]), str(ans[1]), str(ans[2])))
