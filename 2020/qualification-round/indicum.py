@@ -5,11 +5,12 @@ def solve(N, K):
     row = [i for i in range(1, N+1)]    
     rows = list(itertools.permutations(row))
     matrices = []
-    for k in range(len(rows)):
-        matrix = []
-        matrix.append(rows[k])
-        build_matrix(matrix, N)
-        matrices.append(matrix)
+    for step in range(1, N, 2):
+        for k in range(len(rows)):
+            matrix = []
+            matrix.append(rows[k])
+            build_matrix(matrix, N, step)
+            matrices.append(matrix)
 
     j = 0
     while j < len(matrices):
@@ -25,18 +26,18 @@ def solve(N, K):
         return ("IMPOSSIBLE",)
 
             
-def build_matrix(matrix, N):
+def build_matrix(matrix, N, step):
     if len(matrix) == N:
         return
     
     last_row = matrix[-1]
     new_row = [None] * N
 
-    for j in range(1, N, 2):
-        for i in range(N):            
-            new_row[i] = last_row[(i+j) % N]
-        matrix.append(new_row)
-        build_matrix(matrix, N)
+
+    for i in range(N):            
+        new_row[i] = last_row[(i+step) % N]
+    matrix.append(new_row)
+    build_matrix(matrix, N, step)
 
 
 def compute_trace(matrix):
