@@ -11,21 +11,19 @@ def solve(I):
         else:
             sorted_sched.append('C')
 
-
-    C_prev_finish_time = 0
+    C_prev_finish_time = -1
     for i in range(len(sorted_sched)):
         if sorted_sched[i]  == "C":
-            C_start_time = sorted_I[i][0]
-            if C_start_time >= C_prev_finish_time:
+            if sorted_I[i][0] >= C_prev_finish_time:
                 C_prev_finish_time = sorted_I[i][1]
             else:
-                sorted_sched[i] = None
+                sorted_sched[i] = 'X'
         else:
             continue
 
     unsorted_sched = [0] * len(I)
     i = 0
-    while i <len(I):
+    while i < len(I):
         j = 0
         while j < len(sorted_I):
             if I[i] != sorted_I[j]:
@@ -35,8 +33,7 @@ def solve(I):
                 j = len(sorted_I)
         i +=1
 
-
-    if None in unsorted_sched:
+    if "X" in unsorted_sched:
         return "IMPOSSIBLE"
     else:
         return ''.join(unsorted_sched)
